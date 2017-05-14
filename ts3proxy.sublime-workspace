@@ -19,19 +19,16 @@
 			"file": "ts3proxy.py",
 			"settings":
 			{
-				"buffer_size": 1136,
+				"buffer_size": 278,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "import sys\nimport socket\nimport threading\nimport status\n\n_kill = False\n_relayport = 0\n_remoteaddress = \"\"\n_remoteport = 0\n\ndef relay():\n\tsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\n\tsock.bind((\"127.0.0.1\", _relayport))\n\n\tincomingsetup = False\n\tclientport = 0\n\tclientip = \"\"\n\n\twhile True:\n\t\tdata, fromaddr = sock.recvfrom(1024)\n\n\t\tif (_kill == True):\n\t\t\tsock.close()\n\t\t\treturn\n\n\t\tif (incomingsetup == False):\n\t\t\tclientport = fromaddr[1]\n\t\t\tclientip = fromaddr[0]\n\t\t\tincomingsetup = True\n\n\t\tif (fromaddr[0] == clientip):\n\t\t\t#forward from client to server\n\t\t\tsock.sendto(data, (_remoteaddress, _remoteport))\n\t\t\tstatus.bytestoremote += sys.getsizeof(data)\n\t\telse:\n\t\t\t#forward from server to client\n\t\t\tsock.sendto(data, (clientip, clientport))\n\t\t\tstatus.bytesfromremote += sys.getsizeof(data)\n\ndef start(relayport, remoteaddress, remoteport):\n\tglobal _relayport\n\tglobal _remoteaddress\n\tglobal _remoteport\n\n\t_relayport = relayport\n\t_remoteaddress = remoteaddress\n\t_remoteport = remoteport\n\n\trelaythread = threading.Thread(target = relay)\n\trelaythread.start()\n\ndef stop():\n\t_kill = True\n\t#send anything to the input port to trigger it to read, therefore allowing the thread to close\n\tquitsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\n\tquitsock.sendto(\"killing\", (\"127.0.0.1\", _relayport))\n\tquitsock.close()",
-			"file": "/Users/kalle/Downloads/boxy-master/relay/udp.py",
-			"file_size": 1319,
-			"file_write_time": 130614601400000000,
+			"file": "proxy/udp.py",
 			"settings":
 			{
-				"buffer_size": 1321,
+				"buffer_size": 1522,
 				"line_ending": "Unix"
 			}
 		}
@@ -68,6 +65,8 @@
 	},
 	"file_history":
 	[
+		"/Users/kalle/Downloads/boxy-master/relay/udp.py",
+		"/Users/kalle/Downloads/boxy-master/boxy.py",
 		"/Users/kalle/Nextcloud/dev/javascript/the_incredible_radio_extension/popup.js",
 		"/Users/kalle/Nextcloud/dev/javascript/the_incredible_radio_extension/popup.html",
 		"/Users/kalle/Nextcloud/dev/javascript/the_incredible_radio_extension/tire.js",
@@ -83,7 +82,7 @@
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 26.0
 	},
 	"find_in_files":
 	{
@@ -145,15 +144,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1136,
+						"buffer_size": 278,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								992,
-								992
+								40,
+								40
 							]
 						],
 						"settings":
@@ -161,7 +160,7 @@
 							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 47.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -169,24 +168,25 @@
 				},
 				{
 					"buffer": 1,
-					"file": "/Users/kalle/Downloads/boxy-master/relay/udp.py",
+					"file": "proxy/udp.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1321,
+						"buffer_size": 1522,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								215,
-								215
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.sublime-syntax"
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -200,7 +200,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 23.0
+		"height": 26.0
 	},
 	"input":
 	{
@@ -237,7 +237,7 @@
 	"project": "ts3proxy.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 48.0
 	},
 	"save_all_on_build": true,
 	"select_file":

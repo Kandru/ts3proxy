@@ -24,7 +24,7 @@ class tcp():
 					self.clientList[key]['csocket'].send(data)
 				except socket.error as msg:
 					pass
-			time.sleep(.001)
+			time.sleep(.1)
 
 	def getFromClient(self, conn, addr):
 		while True:
@@ -60,7 +60,7 @@ class tcp():
 				del self.clientList[addr]
 				print('disconnected: ' + str(addr))
 				break
-			time.sleep(.001)
+			time.sleep(.1)
 
 	def relay(self):
 		while True:

@@ -24,7 +24,7 @@ class udp():
 					self.socket.sendto(data, key)
 				except:
 					pass
-			time.sleep(.001)
+			time.sleep(.05)
 
 	def proofClientTimeout(self):
 		while True:

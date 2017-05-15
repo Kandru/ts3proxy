@@ -18,13 +18,13 @@ class Udp():
         self.socket.bind(("0.0.0.0", relayPort))
         self.remoteAddr = remoteAddr
         self.remotePort = remotePort
-        self.clients = []
+        self.clients = {}
 
     def relay(self):
         while True:
             # try:
             readable, writable, exceptional = select.select(
-                list(self.clients) + [self.socket], [], list(self.clients), 1)
+                list(self.clients.values()) + [self.socket], [], [], 1)
             for s in readable:
                 # if ts3 server answers to a client
                 if isinstance(s, Ts3Client):
@@ -33,24 +33,20 @@ class Udp():
                 else:
                     # if a client sends something to a ts3 server
                     data, addr = s.recvfrom(1024)
-                    tmpSocket = next((x for x in self.clients if x.addr == addr), None)
                     # if its a new and unkown client
-                    if not tmpSocket:
+                    if not addr in self.clients:
                         print('connected: ' + str(addr))
-                        tmpSocket = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
-                        self.clients.append(tmpSocket)
+                        self.clients[addr] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
                     # send data to ts3 server
-                    tmpSocket.socket.sendto(data, (self.remoteAddr, self.remotePort))
-            while True:
-                item = next((x for x in self.clients if x.last_seen <= time.time() - 2), None)
-                if item:
+                    self.clients[addr].socket.sendto(data, (self.remoteAddr, self.remotePort))
+            # close sockets of disconnected clients
+            for key in dict(self.clients):
+                if self.clients[key].last_seen <= time.time() - 2:
                     try:
-                        item.socket.close()
+                        self.clients[key].socket.close()
                     except:
                         pass
-                    print('disconnected: ' + str(item.addr))
-                    del self.clients[self.clients.index(item)]
-                else:
-                    break
+                    print('disconnected: ' + str(self.clients[key].addr))
+                    del self.clients[key]
             # except:
             #    pass

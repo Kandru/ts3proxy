@@ -4,16 +4,14 @@ import time
 class Ts3Client:
 
     def __init__(self, socket, addr):
-        self.socket = socket
+        self._socket = socket
         self.addr = addr
-        self.lastseen = time.time()
-
-    def get_addr(self):
-        return self.addr
-
-    def get_socket(self):
-        self.lastseen = time.time()
-        return self.socket
+        self.last_seen = time.time()
 
     def fileno(self):
         return self.socket.fileno()
+
+    @property
+    def socket(self):
+        self.last_seen = time.time()
+        return self._socket

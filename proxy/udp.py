@@ -25,15 +25,14 @@ class Udp():
     def proof_client_timeout(self):
         while True:
             # iterare through clients and find one with timeout
-            item = next((x for x in self.clients if x.lastseen <= time.time() - 2), None)
+            item = next((x for x in self.clients if x.last_seen <= time.time() - 2), None)
             if item:
                 try:
-                    item.get_socket().close()
+                    item.socket.close()
                 except:
                     pass
-                print('disconnected: ' + str(item.get_addr()))
+                print('disconnected: ' + str(item.addr))
                 del self.clients[self.clients.index(item)]
-                pass
             time.sleep(1)
 
     def relay(self):
@@ -44,8 +43,8 @@ class Udp():
                 for s in readable:
                     # if ts3 server answers to a client
                     if isinstance(s, Ts3Client):
-                        data, addr = s.get_socket().recvfrom(1024)
-                        self.socket.sendto(data, s.get_addr())
+                        data, addr = s.socket.recvfrom(1024)
+                        self.socket.sendto(data, s.addr)
                     else:
                         # if a client sends something to a ts3 server
                         data, addr = s.recvfrom(1024)
@@ -56,7 +55,6 @@ class Udp():
                             tmpSocket = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
                             self.clients.append(tmpSocket)
                         # send data to ts3 server
-                        tmpSocket.get_socket().sendto(
-                            data, (self.remoteAddr, self.remotePort))
+                        tmpSocket.socket.sendto(data, (self.remoteAddr, self.remotePort))
             except:
                 pass

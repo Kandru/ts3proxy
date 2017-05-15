@@ -40,7 +40,7 @@ class Udp():
                     # send data to ts3 server
                     self.clients[addr].socket.sendto(data, (self.remoteAddr, self.remotePort))
             # close sockets of disconnected clients
-            for key in dict(self.clients):
+            for key in list(self.clients.values()):
                 if self.clients[key].last_seen <= time.time() - 2:
                     try:
                         self.clients[key].socket.close()

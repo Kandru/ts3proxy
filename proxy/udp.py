@@ -22,7 +22,6 @@ class Udp():
 
     def relay(self):
         while True:
-            # try:
             readable, writable, exceptional = select.select(
                 list(self.clients.values()) + [self.socket], [], [], 1)
             for s in readable:
@@ -48,5 +47,3 @@ class Udp():
                         pass
                     print('disconnected: ' + str(client.addr))
                     del self.clients[addr]
-            # except:
-            #    pass

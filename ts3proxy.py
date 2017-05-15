@@ -4,8 +4,8 @@
 import threading
 import yaml
 
-from proxy.udp import udp
-from proxy.tcp import tcp
+from proxy.udp import Udp
+from proxy.tcp import Tcp
 
 if __name__ == '__main__':
     try:
@@ -14,17 +14,17 @@ if __name__ == '__main__':
                 config = yaml.load(stream)
             except yaml.YAMLError as exc:
                 print(exc)
-        ts3Udp = udp(
+        ts3Udp = Udp(
             int(config['ts3server']['relayPort']),
             config['ts3server']['remoteAddr'],
             int(config['ts3server']['remotePort'])
         )
-        ts3Filetransfer = tcp(
+        ts3Filetransfer = Tcp(
             int(config['ts3FileTransfer']['relayPort']),
             config['ts3FileTransfer']['remoteAddr'],
             int(config['ts3FileTransfer']['remotePort'])
         )
-        ts3Serverquery = tcp(
+        ts3Serverquery = Tcp(
             int(config['ts3ServerQuery']['relayPort']),
             config['ts3ServerQuery']['remoteAddr'],
             int(config['ts3ServerQuery']['remotePort'])

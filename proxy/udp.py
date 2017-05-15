@@ -3,7 +3,7 @@ import socket
 import threading
 import select
 
-from proxy.ts3client import ts3client
+from .ts3client import Ts3Client
 
 """udp relay class
 
@@ -11,7 +11,7 @@ class for relaying the teamspeak3 udp communication stuff
 """
 
 
-class udp():
+class Udp():
 
     def __init__(self, relayPort, remoteAddr, remotePort):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -19,20 +19,19 @@ class udp():
         self.remoteAddr = remoteAddr
         self.remotePort = remotePort
         self.clients = []
-        t = threading.Thread(target=self.proofClientTimeout)
+        t = threading.Thread(target=self.proof_client_timeout)
         t.start()
 
-    def proofClientTimeout(self):
+    def proof_client_timeout(self):
         while True:
             # iterare through clients and find one with timeout
-            item = next(
-                (x for x in self.clients if x.lastseen <= time.time() - 2), None)
+            item = next((x for x in self.clients if x.lastseen <= time.time() - 2), None)
             if item:
                 try:
-                    item.getSocket().close()
+                    item.get_socket().close()
                 except:
                     pass
-                print('disconnected: ' + str(item.getAddr()))
+                print('disconnected: ' + str(item.get_addr()))
                 del self.clients[self.clients.index(item)]
                 pass
             time.sleep(1)
@@ -44,22 +43,20 @@ class udp():
                     list(self.clients) + [self.socket], [], list(self.clients))
                 for s in readable:
                     # if ts3 server answers to a client
-                    if isinstance(s, ts3client):
-                        data, addr = s.getSocket().recvfrom(1024)
-                        self.socket.sendto(data, s.getAddr())
+                    if isinstance(s, Ts3Client):
+                        data, addr = s.get_socket().recvfrom(1024)
+                        self.socket.sendto(data, s.get_addr())
                     else:
                         # if a client sends something to a ts3 server
                         data, addr = s.recvfrom(1024)
-                        tmpSocket = next(
-                            (x for x in self.clients if x.addr == addr), None)
+                        tmpSocket = next((x for x in self.clients if x.addr == addr), None)
                         # if its a new and unkown client
                         if not tmpSocket:
                             print('connected: ' + str(addr))
-                            tmpSocket = ts3client(socket.socket(
-                                socket.AF_INET, socket.SOCK_DGRAM), addr)
+                            tmpSocket = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
                             self.clients.append(tmpSocket)
                         # send data to ts3 server
-                        tmpSocket.getSocket().sendto(
+                        tmpSocket.get_socket().sendto(
                             data, (self.remoteAddr, self.remotePort))
             except:
                 pass

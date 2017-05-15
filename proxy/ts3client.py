@@ -1,17 +1,17 @@
 import time
 
 
-class ts3client():
+class Ts3Client:
 
     def __init__(self, socket, addr):
         self.socket = socket
         self.addr = addr
         self.lastseen = time.time()
 
-    def getAddr(self):
+    def get_addr(self):
         return self.addr
 
-    def getSocket(self):
+    def get_socket(self):
         self.lastseen = time.time()
         return self.socket
 

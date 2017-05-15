@@ -34,7 +34,7 @@ class Udp():
                     data, addr = s.recvfrom(1024)
                     # if its a new and unkown client
                     if addr not in self.clients:
-                        print('connected: ' + str(addr))
+                        print('connected:', addr)
                         self.clients[addr] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
                     # send data to ts3 server
                     self.clients[addr].socket.sendto(data, (self.remoteAddr, self.remotePort))
@@ -45,5 +45,5 @@ class Udp():
                         client.socket.close()
                     except:
                         pass
-                    print('disconnected: ' + str(client.addr))
+                    print('disconnected:', addr)
                     del self.clients[addr]

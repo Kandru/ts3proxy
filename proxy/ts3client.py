@@ -9,7 +9,7 @@ class Ts3Client:
         self.last_seen = time.time()
 
     def fileno(self):
-        return self.socket.fileno()
+        return self._socket.fileno()
 
     @property
     def socket(self):

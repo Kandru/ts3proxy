@@ -34,7 +34,7 @@ class Udp():
                     # if a client sends something to a ts3 server
                     data, addr = s.recvfrom(1024)
                     # if its a new and unkown client
-                    if not addr in self.clients:
+                    if addr not in self.clients:
                         print('connected: ' + str(addr))
                         self.clients[addr] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
                     # send data to ts3 server

@@ -21,8 +21,7 @@ class Udp():
 
     def relay(self):
         while True:
-            readable, writable, exceptional = select.select(
-                list(self.clients.values()) + [self.socket], [], [], 1)
+            readable, writable, exceptional = select.select(list(self.clients.values()) + [self.socket], [], [], 1)
             for s in readable:
                 # if ts3 server answers to a client
                 if isinstance(s, Ts3Client):

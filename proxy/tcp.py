@@ -1,6 +1,14 @@
 import time
 import socket
-import threading
+import select
+import uuid
+
+from .ts3client import Ts3Client
+
+"""tcp relay class
+
+class for relaying the teamspeak3 tcp communication stuff
+"""
 
 
 class Tcp():
@@ -12,65 +20,45 @@ class Tcp():
         self.socket.listen()
         self.remoteAddr = remoteAddr
         self.remotePort = remotePort
-        self.clientList = dict()
-        t = threading.Thread(target=self.get_from_server)
-        t.start()
-
-    def get_from_server(self):
-        while True:
-            # send data from remote server to specific client
-            for key in list(self.clientList):
-                try:
-                    data = self.clientList[key]['rsocket'].recv(1024)
-                    self.clientList[key]['lastseen'] = time.time()
-                    self.clientList[key]['csocket'].send(data)
-                except socket.error as msg:
-                    pass
-            time.sleep(.025)
-
-    def get_from_client(self, conn, addr):
-        while True:
-            try:
-                # if we see the client the first time
-                if not addr in self.clientList:
-                    print('connected: ' + str(addr))
-                    rsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    rsocket.connect((self.remoteAddr, self.remotePort))
-                    rsocket.setblocking(False)
-                    self.clientList[addr] = {
-                        'rsocket': rsocket,
-                        'csocket': conn,
-                        'lastseen': time.time()
-                    }
-                data = conn.recv(1024)
-                if len(data) != 0:
-                    self.clientList[addr]['rsocket'].send(data)
-                else:
-                    self.clientList[addr]['rsocket'].close()
-                    del self.clientList[addr]
-                    print('disconnected: ' + str(addr))
-                    break
-            except:
-                try:
-                    self.clientList[addr]['rsocket'].close()
-                except:
-                    pass
-                try:
-                    self.clientList[addr]['csocket'].close()
-                except:
-                    pass
-                del self.clientList[addr]
-                print('disconnected: ' + str(addr))
-                break
-            time.sleep(.025)
+        self.clients = {}
 
     def relay(self):
         while True:
-            # get data from an connected client
-            conn, addr = self.socket.accept()
-            try:
-                t = threading.Thread(
-                    target=self.get_from_client, args=(conn, addr))
-                t.start()
-            except:
-                pass
+            readable, writable, exceptional = select.select(list(self.clients.values()) + [self.socket], [], [], 1)
+            for s in readable:
+                # if ts3 server answers to a client or vice versa
+                if isinstance(s, Ts3Client):
+                    try:
+                        data = s.socket.recv(4096)
+                        if len(data) != 0:
+                            self.clients[s.addr].socket.send(data)
+                        else:
+                            raise
+                    except:
+                        # get second socket from list
+                        addr = self.clients[s.addr].addr
+                        try:
+                            # close other socket
+                            self.clients[s.addr].socket.close()
+                        except:
+                            pass
+                        try:
+                            # close own socket, too
+                            self.clients[addr].socket.close()
+                        except:
+                            pass
+                        del self.clients[s.addr]
+                        del self.clients[addr]
+                        if isinstance(addr, tuple):
+                            print('disconnected', addr)
+                        else:
+                            print('disconnected', s.addr)
+                else:
+                    conn, addr = s.accept()
+                    data = conn.recv(4096)
+                    print('connected', addr)
+                    tmpuid = str(uuid.uuid4())
+                    self.clients[addr] = Ts3Client(conn, tmpuid)
+                    self.clients[tmpuid] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_STREAM), addr)
+                    self.clients[tmpuid].socket.connect((self.remoteAddr, self.remotePort))
+                    self.clients[tmpuid].socket.send(data)

@@ -7,6 +7,7 @@ install_requires = [
 
 setup(
     name="ts3proxy",
+    version='0.1',
     author="Karl-Martin Minkner",
     author_email="support@kandru.de",
     packages=find_packages(),

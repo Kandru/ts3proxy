@@ -4,10 +4,11 @@
 import threading
 import yaml
 
-from proxy.udp import Udp
-from proxy.tcp import Tcp
+from .udp import Udp
+from .tcp import Tcp
 
-if __name__ == '__main__':
+
+def main():
     try:
         with open("config.yml", 'r') as stream:
             try:
@@ -37,3 +38,6 @@ if __name__ == '__main__':
         t3.start()
     except KeyboardInterrupt:
         exit(0)
+
+if __name__ == '__main__':
+    main()

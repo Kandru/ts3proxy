@@ -12,9 +12,9 @@ class for relaying the teamspeak3 udp communication stuff
 
 class Udp():
 
-    def __init__(self, relayPort, remoteAddr, remotePort):
+    def __init__(self, relayAddr="0.0.0.0", relayPort=9987, remoteAddr="127.0.0.1", remotePort=9987):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.bind(("0.0.0.0", relayPort))
+        self.socket.bind((relayAddr, relayPort))
         self.remoteAddr = remoteAddr
         self.remotePort = remotePort
         self.clients = {}

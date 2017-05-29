@@ -11,7 +11,7 @@ ts3FileTransfer:
   remoteAddress: 127.0.0.1
   remotePort: 30033
 ts3ServerQuery:
-  enabled: False
+  enabled: True
   relayAddress: 0.0.0.0
   relayPort: 10011
   remoteAddress: 127.0.0.1

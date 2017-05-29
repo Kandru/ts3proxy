@@ -36,7 +36,7 @@ def main():
           ts3Filetransfer = Tcp(*FT[:3])
           t2 = threading.Thread(target=ts3Filetransfer.relay)
           t2.start()
-          print("FileTransfer: %s:%s <-> %s:%s" % UDP)
+          print("FileTransfer: %s:%s <-> %s:%s" % FT)
 
         if config['ts3ServerQuery']['enabled']:
           SQ = []
@@ -47,7 +47,7 @@ def main():
           ts3Serverquery = Tcp(*SQ[:3])
           t3 = threading.Thread(target=ts3Serverquery.relay)
           t3.start()
-          print("ServerQuery: %s:%s <-> %s:%s" % UDP)
+          print("ServerQuery: %s:%s <-> %s:%s" % SQ)
 
     except KeyboardInterrupt:
         exit(0)

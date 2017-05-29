@@ -25,7 +25,7 @@ def main():
           ts3Udp = Udp(UDP[0],UDP[1],UDP[2])
           t1 = threading.Thread(target=ts3Udp.relay)
           t1.start()
-          print("UDP: %s:%s <-> %s:%s"%(UDP[0],UDP[1],UDP[2],UDP[3]))
+          print("Voice: %s:%s <-> %s:%s"%(UDP[0],UDP[1],UDP[2],UDP[3]))
 
         if config['ts3FileTransfer']['enabled']:
           FT = []

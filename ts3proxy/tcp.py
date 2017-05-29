@@ -13,12 +13,12 @@ class for relaying the teamspeak3 tcp communication stuff
 
 class Tcp():
 
-    def __init__(self, relayAddr="0.0.0.0", relayPort=9987, remoteAddr="127.0.0.1", remotePort=9987):
+    def __init__(self, relayAddress="0.0.0.0", relayPort=9987, remoteAddress="127.0.0.1", remotePort=9987):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.socket.bind((relayAddr, relayPort))
+        self.socket.bind((relayAddress, relayPort))
         self.socket.listen()
-        self.remoteAddr = remoteAddr
+        self.remoteAddr = remoteAddress
         self.remotePort = remotePort
         self.clients = {}
 
@@ -60,5 +60,5 @@ class Tcp():
                     tmpuid = str(uuid.uuid4())
                     self.clients[addr] = Ts3Client(conn, tmpuid)
                     self.clients[tmpuid] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_STREAM), addr)
-                    self.clients[tmpuid].socket.connect((self.remoteAddr, self.remotePort))
+                    self.clients[tmpuid].socket.connect((self.remoteAddress, self.remotePort))
                     self.clients[tmpuid].socket.send(data)

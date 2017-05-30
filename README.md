@@ -8,7 +8,7 @@ TS3Proxy aims to be a complete solution for proxy ts3. It allows you to hide the
 
 ## HowTo configure
 
-Just open the "config.yml" and change the "remoteAddr" to the hostname OR IP of the teamspeak3 server you want to connect to. Please also adjust the ports if they differ. At least the filetransfer ports (relayport and remoteport) need to be exactly the same! Otherwise the filetransfer will not work. All other ports can be adjusted the way you want. There is no need to keep them the same.
+Open the "config.yml" and edit the "remoteAddress" entries. Change them to the IP or hostname of your teamspeak3 server. Disable any relay with "enabled" if needed. Hint: The FileTransfer ports (relayport and remoteport) need to be equal! Otherwise the filetransfer will not work.
 
 ### Blacklist / Whitelist
 

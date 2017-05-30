@@ -13,12 +13,13 @@ class for relaying the teamspeak3 udp communication stuff
 
 class Udp():
 
-    def __init__(self, relay_address="0.0.0.0", relay_port=9987, remote_address="127.0.0.1", remote_port=9987, blacklist_file="blacklist.txt", whitelist_file="whitelist.txt"):
+    def __init__(self, logging, relay_address="0.0.0.0", relay_port=9987, remote_address="127.0.0.1", remote_port=9987, blacklist_file="blacklist.txt", whitelist_file="whitelist.txt"):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.bind((relay_address, relay_port))
         self.remote_address = remote_address
         self.remote_port = remote_port
         self.blacklist = blacklist(blacklist_file, whitelist_file)
+        self.logging = logging
         self.clients = {}
 
     def disconnect_client(self, addr, socket):
@@ -44,12 +45,12 @@ class Udp():
                     if self.blacklist.check(addr[0]):
                         # if its a new and unkown client
                         if addr not in self.clients:
-                            print('connected:', addr)
+                            self.logging.debug('connected: {}'.format(addr))
                             self.clients[addr] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
                         # send data to ts3 server
                         self.clients[addr].socket.sendto(data, (self.remote_address, self.remote_port))
                     else:
-                        print('connection from {} not allowed'.format(addr[0]))
+                        self.logging.info('connection from {} not allowed'.format(addr[0]))
                         if addr not in self.clients:
                             self.disconnect_client(addr, None)
                         else:
@@ -57,5 +58,5 @@ class Udp():
             # close sockets of disconnected clients
             for addr, client in list(self.clients.items()):
                 if client.last_seen <= time.time() - 2:
-                    print('disconnected:', addr)
+                    self.logging.debug('disconnected: {}'.format(addr))
                     self.disconnect_client(addr, client.socket)

@@ -37,7 +37,7 @@ def main():
                 config['ts3server']['whitelist'],
                 config['ts3server']['blacklist']
             ]
-            ts3_server = Udp(*ts3_server_args[:4])
+            ts3_server = Udp(logging, *ts3_server_args[:4])
             t1 = threading.Thread(target=ts3_server.relay)
             t1.start()
             logging.info('Voice: {0}:{1} <-> {2}:{3}'.format(*ts3_server_args))
@@ -50,7 +50,7 @@ def main():
                 config['ts3FileTransfer']['whitelist'],
                 config['ts3FileTransfer']['blacklist']
             ]
-            file_transfer = Tcp(*file_transfer_args[:4])
+            file_transfer = Tcp(logging, *file_transfer_args[:4])
             t2 = threading.Thread(target=file_transfer.relay)
             t2.start()
             logging.info('FileTransfer: {0}:{1} <-> {2}:{3}'.format(*file_transfer_args))
@@ -63,7 +63,7 @@ def main():
                 config['ts3ServerQuery']['whitelist'],
                 config['ts3ServerQuery']['blacklist']
             ]
-            server_query = Tcp(*server_query_args[:4])
+            server_query = Tcp(logging, *server_query_args[:4])
             t3 = threading.Thread(target=server_query.relay)
             t3.start()
             logging.info('ServerQuery: {0}:{1} <-> {2}:{3}'.format(*server_query_args))

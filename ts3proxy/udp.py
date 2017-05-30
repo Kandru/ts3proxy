@@ -30,7 +30,7 @@ class Udp():
             pass
         if addr in self.clients:
             del self.clients[addr]
-            self.statistics.removeUser(addr)
+            self.statistics.remove_user(addr)
 
     def relay(self):
         while True:
@@ -47,13 +47,19 @@ class Udp():
                     if self.blacklist.check(addr[0]):
                         # if its a new and unkown client
                         if addr not in self.clients:
-                            self.logging.debug('connected: {}'.format(addr))
-                            self.clients[addr] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
-                            self.statistics.addUser(addr)
+                            if not self.statistics.user_limit_reached():
+                                self.logging.debug('connection from: {}'.format(addr))
+                                self.clients[addr] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
+                                self.statistics.add_user(addr)
+                            else:
+                                self.logging.info('connection from {} not allowed. user limit ({}) reached.'.format(
+                                    addr[0], self.statistics.max_users))
+                                self.disconnect_client(addr, None)
                         # send data to ts3 server
-                        self.clients[addr].socket.sendto(data, (self.remote_address, self.remote_port))
+                        if addr in self.clients:
+                            self.clients[addr].socket.sendto(data, (self.remote_address, self.remote_port))
                     else:
-                        self.logging.info('connection from {} not allowed'.format(addr[0]))
+                        self.logging.info('connection from {} not allowed. blacklisted.'.format(addr[0]))
                         if addr not in self.clients:
                             self.disconnect_client(addr, None)
                         else:

@@ -6,16 +6,21 @@ ts3server:
   relayPort: 9987
   remoteAddress: 127.0.0.1
   remotePort: 9987
+  blacklist: blacklist.txt
+  whitelist: whitelist.txt
 ts3FileTransfer:
   enabled: True
   relayAddress: 0.0.0.0
   relayPort: 30033
   remoteAddress: 127.0.0.1
   remotePort: 30033
+  blacklist: blacklist.txt
+  whitelist: whitelist.txt
 ts3ServerQuery:
   enabled: True
   relayAddress: 0.0.0.0
   relayPort: 10011
   remoteAddress: 127.0.0.1
   remotePort: 10011
-
+  blacklist: blacklist.txt
+  whitelist: whitelist.txt

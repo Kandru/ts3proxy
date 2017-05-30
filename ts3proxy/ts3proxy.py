@@ -33,7 +33,9 @@ def main():
                 config['ts3server']['relayAddress'],
                 int(config['ts3server']['relayPort']),
                 config['ts3server']['remoteAddress'],
-                int(config['ts3server']['remotePort'])
+                int(config['ts3server']['remotePort']),
+                config['ts3server']['whitelist'],
+                config['ts3server']['blacklist']
             ]
             ts3_server = Udp(*ts3_server_args[:4])
             t1 = threading.Thread(target=ts3_server.relay)
@@ -44,7 +46,9 @@ def main():
                 config['ts3FileTransfer']['relayAddress'],
                 int(config['ts3FileTransfer']['relayPort']),
                 config['ts3FileTransfer']['remoteAddress'],
-                int(config['ts3FileTransfer']['remotePort'])
+                int(config['ts3FileTransfer']['remotePort']),
+                config['ts3FileTransfer']['whitelist'],
+                config['ts3FileTransfer']['blacklist']
             ]
             file_transfer = Tcp(*file_transfer_args[:4])
             t2 = threading.Thread(target=file_transfer.relay)
@@ -55,7 +59,9 @@ def main():
                 config['ts3ServerQuery']['relayAddress'],
                 int(config['ts3ServerQuery']['relayPort']),
                 config['ts3ServerQuery']['remoteAddress'],
-                int(config['ts3ServerQuery']['remotePort'])
+                int(config['ts3ServerQuery']['remotePort']),
+                config['ts3ServerQuery']['whitelist'],
+                config['ts3ServerQuery']['blacklist']
             ]
             server_query = Tcp(*server_query_args[:4])
             t3 = threading.Thread(target=server_query.relay)

@@ -4,6 +4,7 @@ import select
 import uuid
 
 from .ts3client import Ts3Client
+from .blacklist import blacklist
 
 """tcp relay class
 
@@ -13,14 +14,19 @@ class for relaying the teamspeak3 tcp communication stuff
 
 class Tcp():
 
-    def __init__(self, relay_address="0.0.0.0", relay_port=9987, remote_address="127.0.0.1", remote_port=9987):
+    def __init__(self, relay_address="0.0.0.0", relay_port=9987, remote_address="127.0.0.1", remote_port=9987, blacklist_file="blacklist.txt", whitelist_file="whitelist.txt"):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((relay_address, relay_port))
         self.socket.listen()
         self.remote_address = remote_address
         self.remote_port = remote_port
+        self.blacklist = blacklist(blacklist_file, whitelist_file)
         self.clients = {}
+
+    def disconnect_client(self, addr, socket):
+        print('connection from {} not allowed'.format(addr[0]))
+        socket.close()
 
     def relay(self):
         while True:
@@ -56,9 +62,12 @@ class Tcp():
                 else:
                     conn, addr = s.accept()
                     data = conn.recv(4096)
-                    print('connected', addr)
-                    tmpuid = str(uuid.uuid4())
-                    self.clients[addr] = Ts3Client(conn, tmpuid)
-                    self.clients[tmpuid] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_STREAM), addr)
-                    self.clients[tmpuid].socket.connect((self.remote_address, self.remote_port))
-                    self.clients[tmpuid].socket.send(data)
+                    if self.blacklist.check(addr[0]):
+                        print('connected', addr)
+                        tmpuid = str(uuid.uuid4())
+                        self.clients[addr] = Ts3Client(conn, tmpuid)
+                        self.clients[tmpuid] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_STREAM), addr)
+                        self.clients[tmpuid].socket.connect((self.remote_address, self.remote_port))
+                        self.clients[tmpuid].socket.send(data)
+                    else:
+                        self.disconnect_client(addr, conn)

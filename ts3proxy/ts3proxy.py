@@ -8,6 +8,8 @@ import yaml
 
 from .udp import Udp
 from .tcp import Tcp
+from .weblist import Weblist
+from .statistics import Statistics
 
 
 def main():
@@ -28,9 +30,13 @@ def main():
                 logging.StreamHandler()
             ]
         )
+        statistics = Statistics(
+            config['system']['maxUsers']
+        )
         if config['ts3server']['enabled']:
             ts3_server_args = [
                 logging,
+                statistics,
                 config['ts3server']['relayAddress'],
                 int(config['ts3server']['relayPort']),
                 config['ts3server']['remoteAddress'],
@@ -41,7 +47,7 @@ def main():
             ts3_server = Udp(*ts3_server_args)
             t1 = threading.Thread(target=ts3_server.relay)
             t1.start()
-            logging.info('Voice: {1}:{2} <-> {3}:{4}'.format(*ts3_server_args))
+            logging.info('Voice: {2}:{3} <-> {4}:{5}'.format(*ts3_server_args))
         if config['ts3FileTransfer']['enabled']:
             file_transfer_args = [
                 logging,
@@ -70,6 +76,18 @@ def main():
             t3 = threading.Thread(target=server_query.relay)
             t3.start()
             logging.info('ServerQuery: {1}:{2} <-> {3}:{4}'.format(*server_query_args))
+        if config['system']['announceServer']:
+            weblist_server_args = [
+                logging,
+                statistics,
+                config['system']['serverName'],
+                config['ts3server']['relayPort'],
+                config['system']['maxUsers']
+            ]
+            weblist_server = Weblist(*weblist_server_args)
+            t4 = threading.Thread(target=weblist_server.loop)
+            t4.start()
+            logging.info('Weblist: Name:{2}, Port:{3}, MaxUsers: {4}'.format(*weblist_server_args))
     except KeyboardInterrupt:
         exit(0)
 

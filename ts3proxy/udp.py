@@ -13,13 +13,14 @@ class for relaying the teamspeak3 udp communication stuff
 
 class Udp():
 
-    def __init__(self, logging, relay_address="0.0.0.0", relay_port=9987, remote_address="127.0.0.1", remote_port=9987, blacklist_file="blacklist.txt", whitelist_file="whitelist.txt"):
+    def __init__(self, logging, statistics, relay_address="0.0.0.0", relay_port=9987, remote_address="127.0.0.1", remote_port=9987, blacklist_file="blacklist.txt", whitelist_file="whitelist.txt"):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.bind((relay_address, relay_port))
         self.remote_address = remote_address
         self.remote_port = remote_port
         self.blacklist = blacklist(blacklist_file, whitelist_file)
         self.logging = logging
+        self.statistics = statistics
         self.clients = {}
 
     def disconnect_client(self, addr, socket):
@@ -29,6 +30,7 @@ class Udp():
             pass
         if addr in self.clients:
             del self.clients[addr]
+            self.statistics.removeUser(addr)
 
     def relay(self):
         while True:
@@ -47,6 +49,7 @@ class Udp():
                         if addr not in self.clients:
                             self.logging.debug('connected: {}'.format(addr))
                             self.clients[addr] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
+                            self.statistics.addUser(addr)
                         # send data to ts3 server
                         self.clients[addr].socket.sendto(data, (self.remote_address, self.remote_port))
                     else:

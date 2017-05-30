@@ -1,6 +1,6 @@
 import logging
 import sys
-import threading
+
 import yaml
 
 from .udp import Udp
@@ -8,17 +8,14 @@ from .tcp import Tcp
 from .weblist import Weblist
 from .statistics import Statistics
 
-if sys.version_info < (3,):
-    sys.stderr.write("Python < 3 is not supported\n")
-    sys.exit(1)
-
 
 def main():
     with open("config.yml", 'r') as stream:
         try:
             config = yaml.load(stream)
         except yaml.YAMLError as exc:
-            print(exc)
+            print(exc, file=sys.stderr)
+            sys.exit(1)
     numeric_level = getattr(logging, config['system']['logLevel'].upper(), None)
     if not isinstance(numeric_level, int):
         raise ValueError('Invalid log level: %s' % config['system']['logLevel'])

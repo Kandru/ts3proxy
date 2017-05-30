@@ -1,20 +1,16 @@
-import time
-import socket
 import select
+import socket
+import threading
 import uuid
 
-import threading
-
-from .ts3client import Ts3Client
 from .blacklist import Blacklist
-
-"""tcp relay class
-
-class for relaying the teamspeak3 tcp communication stuff
-"""
+from .ts3client import Ts3Client
 
 
-class Tcp():
+class TcpRelay:
+    """
+    Relay for TCP communication of TeamSpeak 3
+    """
 
     def __init__(self, logging, relay_address="0.0.0.0", relay_port=9987, remote_address="127.0.0.1", remote_port=9987, blacklist_file="blacklist.txt", whitelist_file="whitelist.txt"):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -57,7 +53,7 @@ class Tcp():
                         if len(data) != 0:
                             self.clients[s.addr].socket.send(data)
                         else:
-                            raise
+                            raise Exception
                     except:
                         # get second socket from list
                         addr = self.clients[s.addr].addr

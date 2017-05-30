@@ -1,9 +1,8 @@
-import socket
 import select
+import socket
 import struct
-import time
-
 import threading
+import time
 
 
 class Weblist:

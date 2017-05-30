@@ -3,8 +3,8 @@ import sys
 
 import yaml
 
-from .udp import Udp
-from .tcp import Tcp
+from .udp import UdpRelay
+from .tcp import TcpRelay
 from .weblist import Weblist
 from .statistics import Statistics
 
@@ -42,7 +42,7 @@ def main():
             config['ts3server']['blacklist'],
             config['ts3server']['whitelist']
         ]
-        ts3_server = Udp(*ts3_server_args)
+        ts3_server = UdpRelay(*ts3_server_args)
         ts3_server.start_thread()
         services.append(ts3_server)
         logging.info('Voice: {2}:{3} <-> {4}:{5}'.format(*ts3_server_args))
@@ -56,7 +56,7 @@ def main():
             config['ts3FileTransfer']['blacklist'],
             config['ts3FileTransfer']['whitelist']
         ]
-        file_transfer = Tcp(*file_transfer_args)
+        file_transfer = TcpRelay(*file_transfer_args)
         file_transfer.start_thread()
         services.append(file_transfer)
         logging.info('FileTransfer: {1}:{2} <-> {3}:{4}'.format(*file_transfer_args))
@@ -70,7 +70,7 @@ def main():
             config['ts3ServerQuery']['blacklist'],
             config['ts3ServerQuery']['whitelist']
         ]
-        server_query = Tcp(*server_query_args)
+        server_query = TcpRelay(*server_query_args)
         server_query.start_thread()
         services.append(server_query)
         logging.info('ServerQuery: {1}:{2} <-> {3}:{4}'.format(*server_query_args))

@@ -1,19 +1,16 @@
-import time
-import socket
 import select
-
+import socket
 import threading
+import time
 
-from .ts3client import Ts3Client
 from .blacklist import Blacklist
-
-"""udp relay class
-
-class for relaying the teamspeak3 udp communication stuff
-"""
+from .ts3client import Ts3Client
 
 
-class Udp():
+class UdpRelay:
+    """
+    Relay for UDP communication of TeamSpeak 3
+    """
 
     def __init__(self, logging, statistics, relay_address="0.0.0.0", relay_port=9987, remote_address="127.0.0.1", remote_port=9987, blacklist_file="blacklist.txt", whitelist_file="whitelist.txt"):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -29,10 +26,11 @@ class Udp():
         self.run_loop = True
 
     def disconnect_client(self, addr, socket):
-        try:
-            socket.close()
-        except:
-            pass
+        if socket:
+            try:
+                socket.close()
+            except OSError:
+                pass
         if addr in self.clients:
             del self.clients[addr]
             self.statistics.remove_user(addr)

@@ -7,6 +7,9 @@ class for watching a file
 
 
 class Watchdog:
+    """
+    Watch for changes of the file.
+    """
 
     def __init__(self, file):
         self.file = file
@@ -20,5 +23,5 @@ class Watchdog:
                 return True
             else:
                 return False
-        except:
+        except OSError:
             return True

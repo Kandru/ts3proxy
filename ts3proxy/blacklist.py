@@ -2,13 +2,11 @@ import os
 
 from .watchdog import Watchdog
 
-"""blacklist class
-
-class for blacklisting or whitelisting IP addresses
-"""
-
 
 class Blacklist:
+    """
+    Blacklist and whitelist if IP addresses
+    """
 
     def __init__(self, blacklist_file, whitelist_file):
         self.blacklist = []
@@ -20,15 +18,15 @@ class Blacklist:
         self.whitelist_file_wd = Watchdog(self.whitelist_file)
         self.blacklist_file_wd = Watchdog(self.blacklist_file)
 
-    def check(self, IP):
+    def check(self, address):
         self.watch()
         if len(self.whitelist) > 0:
-            if IP in self.whitelist:
+            if address in self.whitelist:
                 return True
             else:
                 return False
         else:
-            if IP in self.blacklist:
+            if address in self.blacklist:
                 return False
             else:
                 return True

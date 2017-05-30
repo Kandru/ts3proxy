@@ -14,18 +14,26 @@ Just open the "config.yml" and change the "remoteAddr" to the hostname OR IP of 
 
 Just unzip the latest release (or master branch) zip file and open a terminal in the unzipped folder:
 
-sudo pip3 install -e .
+```bash
+./setup.sh
+```
 
 And just run it afterwards with an NON-ROOT user via command line:
 
+```bash
 ts3proxy
+```
 
 ## HowTo run (Alternative)
 
 Install all dependencies:
 
+```bash
 apt-get install python3-yaml
+```
 
 Run the ts3proxy
 
+```bash
 python3 -m ts3proxy.ts3proxy
+```

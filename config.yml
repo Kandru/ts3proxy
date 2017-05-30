@@ -1,3 +1,5 @@
+system:
+  logLevel: INFO
 ts3server:
   enabled: True
   relayAddress: 0.0.0.0

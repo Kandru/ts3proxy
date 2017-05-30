@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
+import logging
+import sys
 import threading
 import yaml
 
@@ -15,6 +17,17 @@ def main():
                 config = yaml.load(stream)
             except yaml.YAMLError as exc:
                 print(exc)
+        numeric_level = getattr(logging, config['system']['logLevel'].upper(), None)
+        if not isinstance(numeric_level, int):
+            raise ValueError('Invalid log level: %s' % config['system']['logLevel'])
+        logging.basicConfig(
+            level=numeric_level,
+            format='[%(asctime)s] %(message)s',
+            handlers=[
+                logging.FileHandler("system.log"),
+                logging.StreamHandler()
+            ]
+        )
         if config['ts3server']['enabled']:
             ts3_server_args = [
                 config['ts3server']['relayAddress'],
@@ -25,7 +38,7 @@ def main():
             ts3_server = Udp(*ts3_server_args[:4])
             t1 = threading.Thread(target=ts3_server.relay)
             t1.start()
-            print("Voice: {0}:{1} <-> {2}:{3}".format(*ts3_server_args))
+            logging.info('Voice: {0}:{1} <-> {2}:{3}'.format(*ts3_server_args))
         if config['ts3FileTransfer']['enabled']:
             file_transfer_args = [
                 config['ts3FileTransfer']['relayAddress'],
@@ -36,7 +49,7 @@ def main():
             file_transfer = Tcp(*file_transfer_args[:4])
             t2 = threading.Thread(target=file_transfer.relay)
             t2.start()
-            print("FileTransfer: {0}:{1} <-> {2}:{3}".format(*file_transfer_args))
+            logging.info('FileTransfer: {0}:{1} <-> {2}:{3}'.format(*file_transfer_args))
         if config['ts3ServerQuery']['enabled']:
             server_query_args = [
                 config['ts3ServerQuery']['relayAddress'],
@@ -47,7 +60,7 @@ def main():
             server_query = Tcp(*server_query_args[:4])
             t3 = threading.Thread(target=server_query.relay)
             t3.start()
-            print("ServerQuery: {0}:{1} <-> {2}:{3}".format(*server_query_args))
+            logging.info('ServerQuery: {0}:{1} <-> {2}:{3}'.format(*server_query_args))
     except KeyboardInterrupt:
         exit(0)
 

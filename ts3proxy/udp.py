@@ -12,11 +12,11 @@ class for relaying the teamspeak3 udp communication stuff
 
 class Udp():
 
-    def __init__(self, relayAddress="0.0.0.0", relayPort=9987, remoteAddress="127.0.0.1", remotePort=9987):
+    def __init__(self, relay_address="0.0.0.0", relay_port=9987, remote_address="127.0.0.1", remote_port=9987):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.bind((relayAddress, relayPort))
-        self.remoteAddr = remoteAddress
-        self.remotePort = remotePort
+        self.socket.bind((relay_address, relay_port))
+        self.remote_address = remote_address
+        self.remote_port = remote_port
         self.clients = {}
 
     def relay(self):
@@ -35,7 +35,7 @@ class Udp():
                         print('connected:', addr)
                         self.clients[addr] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_DGRAM), addr)
                     # send data to ts3 server
-                    self.clients[addr].socket.sendto(data, (self.remoteAddress, self.remotePort))
+                    self.clients[addr].socket.sendto(data, (self.remote_address, self.remote_port))
             # close sockets of disconnected clients
             for addr, client in list(self.clients.items()):
                 if client.last_seen <= time.time() - 2:

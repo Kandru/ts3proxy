@@ -91,6 +91,3 @@ def main():
             logging.info('Weblist: Name:{2}, Port:{3}, MaxUsers: {4}'.format(*weblist_server_args))
     except KeyboardInterrupt:
         exit(0)
-
-if __name__ == '__main__':
-    main()

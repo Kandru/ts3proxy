@@ -84,7 +84,7 @@ If you don't want to install TS3Proxy itself, you have to start the proxy with
 a more complex command:
 
 ```bash
-python3 -m ts3proxy.ts3proxy
+python3 -m ts3proxy
 ```
 
 

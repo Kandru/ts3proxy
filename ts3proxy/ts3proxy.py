@@ -1,6 +1,3 @@
-#! /usr/bin/env python3
-# coding: utf-8
-
 import logging
 import sys
 import threading
@@ -10,6 +7,10 @@ from .udp import Udp
 from .tcp import Tcp
 from .weblist import Weblist
 from .statistics import Statistics
+
+if sys.version_info < (3,):
+    sys.stderr.write("Python < 3 is not supported\n")
+    sys.exit(1)
 
 
 def main():

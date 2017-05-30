@@ -1,5 +1,9 @@
+import sys
 from setuptools import setup, find_packages
 
+if sys.version_info < (3,):
+    sys.stderr.write("Python < 3 is not supported\n")
+    sys.exit(1)
 
 install_requires = [
     "PyYAML",

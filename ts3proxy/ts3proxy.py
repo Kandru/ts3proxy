@@ -25,7 +25,7 @@ def main():
             ts3_server = Udp(*ts3_server_args[:4])
             t1 = threading.Thread(target=ts3_server.relay)
             t1.start()
-            print("Voice: %s:%s <-> %s:%s" % ts3_server_args)
+            print("Voice: {0}:{1} <-> {2}:{3}".format(*ts3_server_args))
         if config['ts3FileTransfer']['enabled']:
             file_transfer_args = [
                 config['ts3FileTransfer']['relayAddress'],
@@ -36,7 +36,7 @@ def main():
             file_transfer = Tcp(*file_transfer_args[:4])
             t2 = threading.Thread(target=file_transfer.relay)
             t2.start()
-            print("FileTransfer: %s:%s <-> %s:%s" % file_transfer_args)
+            print("FileTransfer: {0}:{1} <-> {2}:{3}".format(*file_transfer_args))
         if config['ts3ServerQuery']['enabled']:
             server_query_args = [
                 config['ts3ServerQuery']['relayAddress'],
@@ -47,7 +47,7 @@ def main():
             server_query = Tcp(*server_query_args[:4])
             t3 = threading.Thread(target=server_query.relay)
             t3.start()
-            print("ServerQuery: %s:%s <-> %s:%s" % server_query_args)
+            print("ServerQuery: {0}:{1} <-> {2}:{3}".format(*server_query_args))
     except KeyboardInterrupt:
         exit(0)
 

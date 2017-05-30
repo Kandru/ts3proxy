@@ -1,6 +1,6 @@
 import os
 
-from .watchdog import watchdog
+from .watchdog import Watchdog
 
 """blacklist class
 
@@ -8,7 +8,7 @@ class for blacklisting or whitelisting IP addresses
 """
 
 
-class blacklist:
+class Blacklist:
 
     def __init__(self, blacklist_file, whitelist_file):
         self.blacklist = []
@@ -17,8 +17,8 @@ class blacklist:
         self.whitelist_file = whitelist_file
         self.create(self.blacklist_file)
         self.create(self.whitelist_file)
-        self.whitelist_file_wd = watchdog(self.whitelist_file)
-        self.blacklist_file_wd = watchdog(self.blacklist_file)
+        self.whitelist_file_wd = Watchdog(self.whitelist_file)
+        self.blacklist_file_wd = Watchdog(self.blacklist_file)
 
     def check(self, IP):
         self.watch()

@@ -3,7 +3,7 @@ import socket
 import select
 
 from .ts3client import Ts3Client
-from .blacklist import blacklist
+from .blacklist import Blacklist
 
 """udp relay class
 
@@ -18,7 +18,7 @@ class Udp():
         self.socket.bind((relay_address, relay_port))
         self.remote_address = remote_address
         self.remote_port = remote_port
-        self.blacklist = blacklist(blacklist_file, whitelist_file)
+        self.blacklist = Blacklist(blacklist_file, whitelist_file)
         self.logging = logging
         self.statistics = statistics
         self.clients = {}

@@ -4,7 +4,7 @@ import select
 import uuid
 
 from .ts3client import Ts3Client
-from .blacklist import blacklist
+from .blacklist import Blacklist
 
 """tcp relay class
 
@@ -21,7 +21,7 @@ class Tcp():
         self.socket.listen()
         self.remote_address = remote_address
         self.remote_port = remote_port
-        self.blacklist = blacklist(blacklist_file, whitelist_file)
+        self.blacklist = Blacklist(blacklist_file, whitelist_file)
         self.logging = logging
         self.clients = {}
 

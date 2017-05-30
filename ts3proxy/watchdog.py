@@ -6,7 +6,7 @@ class for watching a file
 """
 
 
-class watchdog:
+class Watchdog:
 
     def __init__(self, file):
         self.file = file

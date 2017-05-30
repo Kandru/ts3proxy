@@ -2,11 +2,14 @@
 
 TS3Proxy aims to be a complete solution for proxy ts3. It allows you to hide the original location of your teamspeak server and may be a good choice to defeat DDoS-Attacks. Just use multiple instances for different kind of people (like admins, moderators, members and guests) on different virtual machines (in different data centers of course). And it's ideal for users that want to hide their original client IP address.
 
+Features:
+
   - Proxy TS3 UDP Port
   - Proxy TS3 Filetransfer Port
   - Proxy TS3 Serverquery Port
+  - Announce Proxy to Teamspeak 3 Weblist (with working client counter)
 
-## HowTo configure
+## How to configure
 
 Open the "config.yml" and edit the "remoteAddress" entries. Change them to the IP or hostname of your teamspeak3 server. Disable any relay with "enabled" if needed. Hint: The FileTransfer ports (relayport and remoteport) need to be equal! Otherwise the filetransfer will not work.
 
@@ -16,7 +19,7 @@ The blacklist or whitelist can be used to ban proxy users by IP or only allow sp
 
 There will be a file called "whitelist.txt" and "blacklist.txt" in the root folder. Just type one IP address per line in it and the user won't be able to use the proxy any more.
 
-## HowTo install
+## How to install
 
 Just unzip the latest release (or master branch) zip file and open a terminal in the unzipped folder:
 

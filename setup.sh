@@ -1,1 +1,2 @@
-sudo pip3 install -e .
+#! /bin/sh
+pip3 install -e .

@@ -21,7 +21,7 @@ There will be a file called "whitelist.txt" and "blacklist.txt" in the root fold
 Just unzip the latest release (or master branch) zip file and open a terminal in the unzipped folder:
 
 ```bash
-./setup.sh
+sudo ./setup.sh
 ```
 
 And just run it afterwards with an NON-ROOT user via command line:

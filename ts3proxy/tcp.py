@@ -3,6 +3,8 @@ import socket
 import select
 import uuid
 
+import threading
+
 from .ts3client import Ts3Client
 from .blacklist import Blacklist
 
@@ -25,13 +27,28 @@ class Tcp():
         self.logging = logging
         self.clients = {}
 
+        self.thread = None
+        self.run_loop = True
+
     def disconnect_client(self, addr, socket):
         self.logging.info('connection from {} not allowed'.format(addr[0]))
         socket.close()
 
+    def start_thread(self):
+        self.thread = threading.Thread(target=self.relay)
+        self.thread.start()
+
+    def stop_thread(self):
+        self.run_loop = False
+        # close one socket so that select returns
+        self.socket.close()
+
     def relay(self):
         while True:
             readable, writable, exceptional = select.select(list(self.clients.values()) + [self.socket], [], [], 1)
+            if not self.run_loop:
+                # stop thread
+                break
             for s in readable:
                 # if ts3 server answers to a client or vice versa
                 if isinstance(s, Ts3Client):

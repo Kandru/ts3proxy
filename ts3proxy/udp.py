@@ -2,6 +2,8 @@ import time
 import socket
 import select
 
+import threading
+
 from .ts3client import Ts3Client
 from .blacklist import Blacklist
 
@@ -23,6 +25,9 @@ class Udp():
         self.statistics = statistics
         self.clients = {}
 
+        self.thread = None
+        self.run_loop = True
+
     def disconnect_client(self, addr, socket):
         try:
             socket.close()
@@ -32,9 +37,22 @@ class Udp():
             del self.clients[addr]
             self.statistics.remove_user(addr)
 
+    def start_thread(self):
+        self.thread = threading.Thread(target=self.relay)
+        self.thread.start()
+        self.run_loop = True
+
+    def stop_thread(self):
+        self.run_loop = False
+        # close one socket so that select returns
+        self.socket.close()
+
     def relay(self):
         while True:
             readable, writable, exceptional = select.select(list(self.clients.values()) + [self.socket], [], [], 1)
+            if not self.run_loop:
+                # stop thread
+                break
             for s in readable:
                 # if ts3 server answers to a client
                 if isinstance(s, Ts3Client):

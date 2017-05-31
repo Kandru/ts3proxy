@@ -12,9 +12,14 @@ class UdpRelay:
     Relay for UDP communication of TeamSpeak 3
     """
 
-    def __init__(self, logging, statistics, relay_address="0.0.0.0", relay_port=9987, remote_address="127.0.0.1", remote_port=9987, blacklist_file="blacklist.txt", whitelist_file="whitelist.txt"):
+    def __init__(self, logging, statistics,
+                 relay_address="0.0.0.0", relay_port=9987,
+                 remote_address="127.0.0.1", remote_port=9987,
+                 blacklist_file="blacklist.txt", whitelist_file="whitelist.txt"):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.bind((relay_address, relay_port))
+        self.relay_address = relay_address
+        self.relay_port = relay_port
         self.remote_address = remote_address
         self.remote_port = remote_port
         self.blacklist = Blacklist(blacklist_file, whitelist_file)

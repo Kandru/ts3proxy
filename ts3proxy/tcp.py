@@ -82,7 +82,7 @@ class TcpRelay:
                     conn, addr = s.accept()
                     data = conn.recv(4096)
                     if self.blacklist.check(addr[0]):
-                        self.logging.debug('connected', addr)
+                        self.logging.debug('connected: {}'.format(addr))
                         tmpuid = str(uuid.uuid4())
                         self.clients[addr] = Ts3Client(conn, tmpuid)
                         self.clients[tmpuid] = Ts3Client(socket.socket(socket.AF_INET, socket.SOCK_STREAM), addr)

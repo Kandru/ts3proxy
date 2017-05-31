@@ -1,5 +1,5 @@
 #! /bin/sh
 pip3 install .
-mv config.example.yml config.yml
+cp -n config.example.yml config.yml
 "${EDITOR:-nano}" config.yml
-ts3proxy
+echo "Successfully installed and configured TS3Proxy. Start it using ts3proxy"

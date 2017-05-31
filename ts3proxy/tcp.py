@@ -75,9 +75,9 @@ class TcpRelay:
                         del self.clients[s.addr]
                         del self.clients[addr]
                         if isinstance(addr, tuple):
-                            self.logging.debug('disconnected', addr)
+                            self.logging.debug('disconnected: {}'.format(addr))
                         else:
-                            self.logging.debug('disconnected', s.addr)
+                            self.logging.debug('disconnected: {}'.format(s.addr))
                 else:
                     conn, addr = s.accept()
                     data = conn.recv(4096)

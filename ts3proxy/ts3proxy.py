@@ -32,46 +32,21 @@ def main():
     )
     services = []
     if config['ts3server']['enabled']:
-        ts3_server = UdpRelay(
-            logging,
-            statistics,
-            config['ts3server']['relayAddress'],
-            config['ts3server']['relayPort'],
-            config['ts3server']['remoteAddress'],
-            config['ts3server']['remotePort'],
-            config['ts3server']['blacklist'],
-            config['ts3server']['whitelist']
-        )
+        ts3_server = UdpRelay.create_from_config(logging, statistics, config['ts3server'])
         ts3_server.start_thread()
         services.append(ts3_server)
         logging.info('Voice: {0.relay_address}:{0.relay_port} <-> {0.remote_address}:{0.remote_port}'.format(
             ts3_server
         ))
     if config['ts3FileTransfer']['enabled']:
-        file_transfer = TcpRelay(
-            logging,
-            config['ts3FileTransfer']['relayAddress'],
-            config['ts3FileTransfer']['relayPort'],
-            config['ts3FileTransfer']['remoteAddress'],
-            config['ts3FileTransfer']['remotePort'],
-            config['ts3FileTransfer']['blacklist'],
-            config['ts3FileTransfer']['whitelist']
-        )
+        file_transfer = TcpRelay.create_from_config(logging, config['ts3FileTransfer'])
         file_transfer.start_thread()
         services.append(file_transfer)
         logging.info('FileTransfer: {0.relay_address}:{0.relay_port} <-> {0.remote_address}:{0.remote_port}'.format(
             file_transfer
         ))
     if config['ts3ServerQuery']['enabled']:
-        server_query = TcpRelay(
-            logging,
-            config['ts3ServerQuery']['relayAddress'],
-            config['ts3ServerQuery']['relayPort'],
-            config['ts3ServerQuery']['remoteAddress'],
-            config['ts3ServerQuery']['remotePort'],
-            config['ts3ServerQuery']['blacklist'],
-            config['ts3ServerQuery']['whitelist']
-        )
+        server_query = TcpRelay.create_from_config(logging, config['ts3ServerQuery'])
         server_query.start_thread()
         services.append(server_query)
         logging.info('ServerQuery: {0.relay_address}:{0.relay_port} <-> {0.remote_address}:{0.remote_port}'.format(

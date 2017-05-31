@@ -90,3 +90,16 @@ class UdpRelay:
                 if client.last_seen <= time.time() - 2:
                     self.logging.debug('disconnected: {}'.format(addr))
                     self.disconnect_client(addr, client.socket)
+
+    @classmethod
+    def create_from_config(cls, logging, statistics, relay_config):
+        return cls(
+            logging=logging,
+            statistics=statistics,
+            relay_address=relay_config['relayAddress'],
+            relay_port=relay_config['relayPort'],
+            remote_address=relay_config['remoteAddress'],
+            remote_port=relay_config['remotePort'],
+            blacklist_file=relay_config['blacklist'],
+            whitelist_file=relay_config['whitelist'],
+        )

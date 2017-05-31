@@ -90,3 +90,15 @@ class TcpRelay:
                         self.clients[tmpuid].socket.send(data)
                     else:
                         self.disconnect_client(addr, conn)
+
+    @classmethod
+    def create_from_config(cls, logging, relay_config):
+        return cls(
+            logging=logging,
+            relay_address=relay_config['relayAddress'],
+            relay_port=relay_config['relayPort'],
+            remote_address=relay_config['remoteAddress'],
+            remote_port=relay_config['remotePort'],
+            blacklist_file=relay_config['blacklist'],
+            whitelist_file=relay_config['whitelist'],
+        )

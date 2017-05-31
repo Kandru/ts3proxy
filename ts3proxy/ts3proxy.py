@@ -17,7 +17,7 @@ def main():
             print(exc, file=sys.stderr)
             sys.exit(1)
     numeric_level = getattr(logging, config['system']['logLevel'].upper(), None)
-    if not isinstance(numeric_level, int):
+    if numeric_level is None:
         raise ValueError('Invalid log level: %s' % config['system']['logLevel'])
     logging.basicConfig(
         level=numeric_level,

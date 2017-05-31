@@ -36,9 +36,9 @@ def main():
             logging,
             statistics,
             config['ts3server']['relayAddress'],
-            int(config['ts3server']['relayPort']),
+            config['ts3server']['relayPort'],
             config['ts3server']['remoteAddress'],
-            int(config['ts3server']['remotePort']),
+            config['ts3server']['remotePort'],
             config['ts3server']['blacklist'],
             config['ts3server']['whitelist']
         )
@@ -51,9 +51,9 @@ def main():
         file_transfer = TcpRelay(
             logging,
             config['ts3FileTransfer']['relayAddress'],
-            int(config['ts3FileTransfer']['relayPort']),
+            config['ts3FileTransfer']['relayPort'],
             config['ts3FileTransfer']['remoteAddress'],
-            int(config['ts3FileTransfer']['remotePort']),
+            config['ts3FileTransfer']['remotePort'],
             config['ts3FileTransfer']['blacklist'],
             config['ts3FileTransfer']['whitelist']
         )
@@ -66,9 +66,9 @@ def main():
         server_query = TcpRelay(
             logging,
             config['ts3ServerQuery']['relayAddress'],
-            int(config['ts3ServerQuery']['relayPort']),
+            config['ts3ServerQuery']['relayPort'],
             config['ts3ServerQuery']['remoteAddress'],
-            int(config['ts3ServerQuery']['remotePort']),
+            config['ts3ServerQuery']['remotePort'],
             config['ts3ServerQuery']['blacklist'],
             config['ts3ServerQuery']['whitelist']
         )

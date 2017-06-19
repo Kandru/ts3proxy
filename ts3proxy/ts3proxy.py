@@ -32,12 +32,18 @@ def main():
     )
     services = []
     if config['ts3server']['enabled']:
-        ts3_server = UdpRelay.create_from_config(logging, statistics, config['ts3server'])
-        ts3_server.start_thread()
-        services.append(ts3_server)
-        logging.info('Voice: {0.relay_address}:{0.relay_port} <-> {0.remote_address}:{0.remote_port}'.format(
-            ts3_server
-        ))
+        ts3_config = config['ts3server']
+        ts3_servers = config['ts3server']['servers']
+        for item in ts3_servers.split(','):
+            ts3_config['relayPort'] = int(item.split(':')[0])
+            ts3_config['remoteAddress'] = item.split(':')[1]
+            ts3_config['remotePort'] = int(item.split(':')[2])
+            ts3_server = UdpRelay.create_from_config(logging, statistics, ts3_config)
+            ts3_server.start_thread()
+            services.append(ts3_server)
+            logging.info('Voice: {0.relay_address}:{0.relay_port} <-> {0.remote_address}:{0.remote_port}'.format(
+                ts3_server
+            ))
     if config['ts3FileTransfer']['enabled']:
         file_transfer = TcpRelay.create_from_config(logging, config['ts3FileTransfer'])
         file_transfer.start_thread()

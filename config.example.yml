@@ -1,14 +1,15 @@
 system:
   logLevel: INFO
-  announceServer: False
+  # announce only if you have one virtual ts3 server. won't work otherwise.
+  announceServer: True
   serverName: Ts3Proxy
   maxUsers: 100
 ts3server:
   enabled: True
   relayAddress: 0.0.0.0
-  relayPort: 9987
-  remoteAddress: 127.0.0.1
-  remotePort: 9987
+  # relayPort:remoteAddress:remotePort
+  # multiple servers splitted by ","
+  servers: "9987:127.0.0.1:9987"
   blacklist: blacklist.txt
   whitelist: whitelist.txt
 ts3FileTransfer:

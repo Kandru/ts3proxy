@@ -1,5 +1,6 @@
 system:
   logLevel: INFO
+  logfile: system.log
   # announce only if you have one virtual ts3 server. won't work otherwise.
   announceServer: True
   serverName: Ts3Proxy

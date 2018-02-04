@@ -23,7 +23,7 @@ def main():
         level=numeric_level,
         format='[%(asctime)s] %(message)s',
         handlers=[
-            logging.FileHandler("system.log"),
+            logging.FileHandler(config['system']['logfile']),
             logging.StreamHandler()
         ]
     )

@@ -60,7 +60,6 @@ class UdpRelay:
                 # if ts3 server answers to a client
                 if isinstance(s, Ts3Client):
                     data, addr = s.socket.recvfrom(1024)
-                    # print(s.socket)
                     self.socket.sendto(data, s.addr)
                 else:
                     # if a client sends something to a ts3 server

@@ -60,6 +60,7 @@ class UdpRelay:
                 # if ts3 server answers to a client
                 if isinstance(s, Ts3Client):
                     data, addr = s.socket.recvfrom(1024)
+                    # print(s.socket)
                     self.socket.sendto(data, s.addr)
                 else:
                     # if a client sends something to a ts3 server
@@ -78,6 +79,12 @@ class UdpRelay:
                                 self.disconnect_client(addr, None)
                         # send data to ts3 server
                         if addr in self.clients:
+                            if data.startswith(b'TS3INIT1') and data[17] == 4: # and b'clientinitiv ' in data
+                                if b'cip=' in data:
+                                    print("Malicious clientinitiv from {}".format(addr))
+                                    self.disconnect_client(addr, None)
+                                    return
+                                data += bytearray(' cip={}:{}'.format(addr[0], addr[1]), encoding="utf-8")
                             self.clients[addr].socket.sendto(data, (self.remote_address, self.remote_port))
                     else:
                         self.logging.info('connection from {} not allowed. blacklisted.'.format(addr[0]))

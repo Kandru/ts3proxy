@@ -12,7 +12,7 @@ from .statistics import Statistics
 def main():
     with open("config.yml", 'r') as stream:
         try:
-            config = yaml.load(stream)
+            config = yaml.safe_load(stream)
         except yaml.YAMLError as exc:
             print(exc, file=sys.stderr)
             sys.exit(1)
